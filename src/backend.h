@@ -2,6 +2,7 @@
 #define SRC_BACKEND_H
 
 #define _USE_MATH_DEFINES
+#include <ctype.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,14 +22,16 @@ int readOne(char *fileName, data_struct *myData);
 void readTwo(char *fileName, data_struct *myData);
 int getCountMemory(char *str);
 void getDigit(char *str, data_struct *myData, int *index);
+int conditionTrue(char *str, int i);
 double findMax(double *mas_d, int c);
 double findMin(double *mas_d, int c);
 void changeScale(data_struct *myData, double value);
 void cleanAll(data_struct *myData);
+void centerVertex(data_struct *myData);
 
 // =====//
 void rote_X(data_struct *myData, double angle);
 void rote_Y(data_struct *myData, double angle);
 void rote_Z(data_struct *myData, double angle);
 
-#endif // SRC_BACKEND_H
+#endif  // SRC_BACKEND_H

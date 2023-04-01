@@ -10,8 +10,7 @@ int readOne(char *fileName, data_struct *myData) {
     while (!stopFlag) {
       estr = fgets(str, sizeof(str), fp);
       if (estr != NULL) {
-        if (str[0] == 'v' && str[1] == ' ')
-          myData->countVertex += 3;
+        if (str[0] == 'v' && str[1] == ' ') myData->countVertex += 3;
         if (str[0] == 'f' && str[1] == ' ') {
           myData->countEdges++;
           myData->countFacets += getCountMemory(str);
@@ -29,12 +28,13 @@ void readTwo(char *fileName, data_struct *myData) {
   int stopFlag = 0;
 
   myData->vector_3d = calloc(myData->countVertex, sizeof(double));
-  if (myData->vector_3d == NULL)
-    stopFlag = 1;
 
   myData->poligons = calloc(myData->countFacets, sizeof(unsigned int));
-  if (myData->poligons == NULL)
+
+  if (myData->vector_3d == NULL || myData->poligons == NULL) {
     stopFlag = 1;
+    cleanAll(myData);
+  }
 
   if (!stopFlag) {
     double x = 0, y = 0, z = 0;
@@ -75,18 +75,18 @@ void readTwo(char *fileName, data_struct *myData) {
 int getCountMemory(char *str) {
   int rez = 0;
   for (int i = 0; i < (int)strlen(str); i++) {
-    if (str[i] >= 48 && str[i] <= 57 && str[i - 1] == ' ')
-      rez++;
+    if (conditionTrue(str, i) != -1) rez++;
   }
   return rez * 2;
 }
 
 void getDigit(char *str, data_struct *myData, int *index) {
-  int countNum = 0, firstElem = 0;
+  int countNum = 0, firstElem = 0, sign = 0, value = 0;
   char digit[255] = "";
 
   for (int i = 0; i < (int)strlen(str); i++) {
-    if (str[i] >= 48 && str[i] <= 57 && str[i - 1] == ' ') {
+    sign = conditionTrue(str, i);
+    if (sign != -1) {
       int stopFlag = 0;
       int k = 0;
       while (!stopFlag) {
@@ -99,14 +99,17 @@ void getDigit(char *str, data_struct *myData, int *index) {
         }
       }
       if (strlen(digit) > 0) {
+        value = atoi(digit) - 1;
+        if (sign) value *= -1;
+
         if (countNum == 1) {
-          myData->poligons[*index] = atoi(digit) - 1;
+          myData->poligons[*index] = value;
           firstElem = myData->poligons[*index];
           *index += 1;
         }
         if (countNum != 1) {
-          myData->poligons[*index] = atoi(digit) - 1;
-          myData->poligons[*index + 1] = atoi(digit) - 1;
+          myData->poligons[*index] = value;
+          myData->poligons[*index + 1] = value;
           *index += 2;
         }
         memset(digit, '\0', strlen(digit));
@@ -115,6 +118,17 @@ void getDigit(char *str, data_struct *myData, int *index) {
   }
   myData->poligons[*index] = firstElem;
   *index += 1;
+}
+
+int conditionTrue(char *str, int i) {
+  int resCode = -1;
+  if ((str[i] >= 48 && str[i] <= 57 && str[i - 1] == ' ') ||
+      (str[i] >= 48 && str[i] <= 57 && str[i - 2] == ' ' &&
+       (str[i - 1] == '-' || str[i - 1] == '+'))) {
+    if (str[i - 1] == '+' || str[i - 1] == ' ') resCode = 0;
+    if (str[i - 1] == '-') resCode = 1;
+  }
+  return resCode;
 }
 
 void centerVertex(data_struct *myData) {
@@ -175,8 +189,7 @@ double findMax(double *mas_d, int c) {
   int i = 0;
   double begin = mas_d[0];
   while (i < c) {
-    if (mas_d[i] > begin)
-      begin = mas_d[i];
+    if (mas_d[i] > begin) begin = mas_d[i];
     i++;
   }
   return begin;
@@ -186,8 +199,7 @@ double findMin(double *mas_d, int c) {
   int i = 0;
   double begin = mas_d[0];
   while (i < c) {
-    if (mas_d[i] < begin)
-      begin = mas_d[i];
+    if (mas_d[i] < begin) begin = mas_d[i];
     i++;
   }
   return begin;
@@ -217,8 +229,7 @@ void changeScale(data_struct *myData, double value) {
       j++;
     }
     d_max = findMax(myData->vector_3d, myData->countVertex);
-    if (d_max != 0)
-      scale = (value - value * -1) / d_max;
+    if (d_max != 0) scale = (value - value * -1) / d_max;
     unsigned int k = 0;
     while (k < myData->countVertex) {
       myData->vector_3d[k] *= scale;
