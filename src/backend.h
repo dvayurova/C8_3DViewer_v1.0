@@ -31,4 +31,4 @@ void rote_X(data_struct *myData, double angle);
 void rote_Y(data_struct *myData, double angle);
 void rote_Z(data_struct *myData, double angle);
 
-#endif  // SRC_BACKEND_H
+#endif // SRC_BACKEND_H
