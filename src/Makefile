@@ -48,7 +48,7 @@ install:
 	rm  -rf build
 	mkdir build
 	cd 3d_viewer && qmake && make && make clean && rm Makefile && cd ../ && mv 3d_viewer/3dv.app build
-	open build/3dv.app
+	
 
 uninstall:
 	rm -rf build*
