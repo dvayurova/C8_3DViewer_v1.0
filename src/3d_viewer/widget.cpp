@@ -14,7 +14,9 @@ Widget::Widget(QWidget *parent) : QOpenGLWidget{parent}, ui(new Ui::Widget) {
 
   ui->z_rotation->setMaximum(181);
   ui->z_rotation->setMinimum(-181);
-  ui->z_rotation->setValue(0);ui->y_rotation->setValue(0);ui->x_rotation->setValue(0);
+  ui->z_rotation->setValue(0);
+  ui->y_rotation->setValue(0);
+  ui->x_rotation->setValue(0);
   ui->label_x_rot->setValidator(new QIntValidator(-180, 18, this));
   ui->label_y_rot->setValidator(new QIntValidator(-180, 18, this));
   ui->label_z_rot->setValidator(new QIntValidator(-180, 18, this));
@@ -92,7 +94,9 @@ void Widget::on_pushButton_clicked() {
   translate_x = translate_y = translate_z = 0;
   scale_num = 0.3;
   ui->label_scale->setText(QString::number(scale_num, 'f', 2));
-  ui->z_rotation->setValue(0);ui->y_rotation->setValue(0);ui->x_rotation->setValue(0);
+  ui->z_rotation->setValue(0);
+  ui->y_rotation->setValue(0);
+  ui->x_rotation->setValue(0);
   if (readOne(filename, &myData) == 0) {
 
     readTwo(filename, &myData);
@@ -154,12 +158,18 @@ void Widget::on_button_scale_up_clicked() {
 void Widget::translation() {
   if (file_exists) {
     QPushButton *button = (QPushButton *)sender();
-    if (button->text() == "X-") translate_x -= 0.1;
-    if (button->text() == "X+") translate_x += 0.1;
-    if (button->text() == "Y-") translate_y -= 0.1;
-    if (button->text() == "Y+") translate_y += 0.1;
-    if (button->text() == "Z-") translate_z -= 0.1;
-    if (button->text() == "Z+") translate_z += 0.1;
+    if (button->text() == "X-")
+      translate_x -= 0.1;
+    if (button->text() == "X+")
+      translate_x += 0.1;
+    if (button->text() == "Y-")
+      translate_y -= 0.1;
+    if (button->text() == "Y+")
+      translate_y += 0.1;
+    if (button->text() == "Z-")
+      translate_z -= 0.1;
+    if (button->text() == "Z+")
+      translate_z += 0.1;
     update();
   }
 }
