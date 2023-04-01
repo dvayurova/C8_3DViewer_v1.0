@@ -52,15 +52,12 @@ class Widget : public QOpenGLWidget {
   void on_label_y_move_textEdited(const QString &arg1);
 
   void on_label_z_move_textEdited(const QString &arg1);
-  // void change_rot();
 
   void on_x_rotation_valueChanged(int value);
 
   void on_y_rotation_valueChanged(int value);
 
   void on_z_rotation_valueChanged(int value);
-
-  // void on_x_rotation_valueChanged(int value);
 
  private:
   data_struct myData;
