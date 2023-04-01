@@ -6,7 +6,7 @@ LC = lcov -c -d .
 C_FILES = *.c
 O_FILES =  *.o
 LIBS=-lcheck
-LINUX=-lcheck -lm -lpthread -lrt -lsubunit
+LINUX=-lcheck -lm -lpthread -lrt 
 OS=$(shell uname -s)
 
 all : install 

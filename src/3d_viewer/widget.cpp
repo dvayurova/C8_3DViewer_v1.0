@@ -86,6 +86,7 @@ void Widget::on_pushButton_clicked() {
   ui->label_filename->setText(str);
   QByteArray s = str.toLocal8Bit();
   char *filename = s.data();
+  cleanAll(&myData);
   myData.countEdges = 0;
   myData.countFacets = 0;
   myData.countVertex = 0;
@@ -98,7 +99,6 @@ void Widget::on_pushButton_clicked() {
   ui->y_rotation->setValue(0);
   ui->x_rotation->setValue(0);
   if (readOne(filename, &myData) == 0) {
-
     readTwo(filename, &myData);
     file_exists = 1;
     centerVertex(&myData);
@@ -158,18 +158,12 @@ void Widget::on_button_scale_up_clicked() {
 void Widget::translation() {
   if (file_exists) {
     QPushButton *button = (QPushButton *)sender();
-    if (button->text() == "X-")
-      translate_x -= 0.1;
-    if (button->text() == "X+")
-      translate_x += 0.1;
-    if (button->text() == "Y-")
-      translate_y -= 0.1;
-    if (button->text() == "Y+")
-      translate_y += 0.1;
-    if (button->text() == "Z-")
-      translate_z -= 0.1;
-    if (button->text() == "Z+")
-      translate_z += 0.1;
+    if (button->text() == "X-") translate_x -= 0.1;
+    if (button->text() == "X+") translate_x += 0.1;
+    if (button->text() == "Y-") translate_y -= 0.1;
+    if (button->text() == "Y+") translate_y += 0.1;
+    if (button->text() == "Z-") translate_z -= 0.1;
+    if (button->text() == "Z+") translate_z += 0.1;
     update();
   }
 }
