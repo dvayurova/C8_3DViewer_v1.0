@@ -10,8 +10,7 @@ int readOne(char *fileName, data_struct *myData) {
     while (!stopFlag) {
       estr = fgets(str, sizeof(str), fp);
       if (estr != NULL) {
-        if (str[0] == 'v' && str[1] == ' ')
-          myData->countVertex += 3;
+        if (str[0] == 'v' && str[1] == ' ') myData->countVertex += 3;
         if (str[0] == 'f' && str[1] == ' ') {
           myData->countEdges++;
           myData->countFacets += getCountMemory(str);
@@ -29,12 +28,10 @@ void readTwo(char *fileName, data_struct *myData) {
   int stopFlag = 0;
 
   myData->vector_3d = calloc(myData->countVertex, sizeof(double));
-  if (myData->vector_3d == NULL)
-    stopFlag = 1;
+  if (myData->vector_3d == NULL) stopFlag = 1;
 
   myData->poligons = calloc(myData->countFacets, sizeof(unsigned int));
-  if (myData->poligons == NULL)
-    stopFlag = 1;
+  if (myData->poligons == NULL) stopFlag = 1;
 
   if (!stopFlag) {
     double x = 0, y = 0, z = 0;
@@ -75,8 +72,7 @@ void readTwo(char *fileName, data_struct *myData) {
 int getCountMemory(char *str) {
   int rez = 0;
   for (int i = 0; i < (int)strlen(str); i++) {
-    if (str[i] >= 48 && str[i] <= 57 && str[i - 1] == ' ')
-      rez++;
+    if (str[i] >= 48 && str[i] <= 57 && str[i - 1] == ' ') rez++;
   }
   return rez * 2;
 }
@@ -117,7 +113,7 @@ void getDigit(char *str, data_struct *myData, int *index) {
   *index += 1;
 }
 
-void center_vertex(data_struct *myData) {
+void centerVertex(data_struct *myData) {
   unsigned int i = 0;
 
   double *ver_x = NULL;
@@ -130,67 +126,68 @@ void center_vertex(data_struct *myData) {
   ver_x = calloc(myData->countVertex / 3, sizeof(double));
   ver_y = calloc(myData->countVertex / 3, sizeof(double));
   ver_z = calloc(myData->countVertex / 3, sizeof(double));
-  unsigned int j = 0;
-  while (i < myData->countVertex) {
-    ver_x[j] = myData->vector_3d[i];
-    i++;
-    ver_y[j] = myData->vector_3d[i];
-    i++;
-    ver_z[j] = myData->vector_3d[i];
-    i++;
-    j++;
-  }
 
-  center_x = find_min(ver_x, myData->countVertex / 3) +
-             (find_max(ver_x, myData->countVertex / 3) -
-              find_min(ver_x, myData->countVertex / 3)) /
-                 2;
-  center_y = find_min(ver_y, myData->countVertex / 3) +
-             (find_max(ver_y, myData->countVertex / 3) -
-              find_min(ver_y, myData->countVertex / 3)) /
-                 2;
-  center_z = find_min(ver_z, myData->countVertex / 3) +
-             (find_max(ver_z, myData->countVertex / 3) -
-              find_min(ver_z, myData->countVertex / 3)) /
-                 2;
+  if (ver_x != NULL && ver_y != NULL && ver_z != NULL) {
+    unsigned int j = 0;
+    while (i < myData->countVertex) {
+      ver_x[j] = myData->vector_3d[i];
+      i++;
+      ver_y[j] = myData->vector_3d[i];
+      i++;
+      ver_z[j] = myData->vector_3d[i];
+      i++;
+      j++;
+    }
 
-  unsigned int k = 0;
-  while (k < myData->countVertex) {
-    myData->vector_3d[k] -= center_x;
-    k++;
-    myData->vector_3d[k] -= center_y;
-    k++;
-    myData->vector_3d[k] -= center_z;
-    k++;
+    center_x = findMin(ver_x, myData->countVertex / 3) +
+               (findMax(ver_x, myData->countVertex / 3) -
+                findMin(ver_x, myData->countVertex / 3)) /
+                   2;
+    center_y = findMin(ver_y, myData->countVertex / 3) +
+               (findMax(ver_y, myData->countVertex / 3) -
+                findMin(ver_y, myData->countVertex / 3)) /
+                   2;
+    center_z = findMin(ver_z, myData->countVertex / 3) +
+               (findMax(ver_z, myData->countVertex / 3) -
+                findMin(ver_z, myData->countVertex / 3)) /
+                   2;
+
+    unsigned int k = 0;
+    while (k < myData->countVertex) {
+      myData->vector_3d[k] -= center_x;
+      k++;
+      myData->vector_3d[k] -= center_y;
+      k++;
+      myData->vector_3d[k] -= center_z;
+      k++;
+    }
+    free(ver_x);
+    free(ver_y);
+    free(ver_z);
   }
-  free(ver_x);
-  free(ver_y);
-  free(ver_z);
 }
 
-double find_max(double *mas_d, int c) {
+double findMax(double *mas_d, int c) {
   int i = 0;
   double begin = mas_d[0];
   while (i < c) {
-    if (mas_d[i] > begin)
-      begin = mas_d[i];
+    if (mas_d[i] > begin) begin = mas_d[i];
     i++;
   }
   return begin;
 }
 
-double find_min(double *mas_d, int c) {
+double findMin(double *mas_d, int c) {
   int i = 0;
   double begin = mas_d[0];
   while (i < c) {
-    if (mas_d[i] < begin)
-      begin = mas_d[i];
+    if (mas_d[i] < begin) begin = mas_d[i];
     i++;
   }
   return begin;
 }
 
-void change_scale(data_struct *myData, double value) {
+void changeScale(data_struct *myData, double value) {
   unsigned int i = 0;
 
   double *ver_x = NULL;
@@ -200,34 +197,34 @@ void change_scale(data_struct *myData, double value) {
   ver_x = calloc(myData->countVertex / 3 + 1, sizeof(double));
   ver_y = calloc(myData->countVertex / 3 + 1, sizeof(double));
   ver_z = calloc(myData->countVertex / 3 + 1, sizeof(double));
-
-  unsigned int j = 0;
-  double d_max = 0;
-  double scale = 0;
-  while (i < myData->countVertex) {
-    ver_x[j] = myData->vector_3d[i];
-    i++;
-    ver_y[j] = myData->vector_3d[i];
-    i++;
-    ver_z[j] = myData->vector_3d[i];
-    i++;
-    j++;
+  if (ver_x != NULL && ver_y != NULL && ver_z != NULL) {
+    unsigned int j = 0;
+    double d_max = 0;
+    double scale = 0;
+    while (i < myData->countVertex) {
+      ver_x[j] = myData->vector_3d[i];
+      i++;
+      ver_y[j] = myData->vector_3d[i];
+      i++;
+      ver_z[j] = myData->vector_3d[i];
+      i++;
+      j++;
+    }
+    d_max = findMax(myData->vector_3d, myData->countVertex);
+    if (d_max != 0) scale = (value - value * -1) / d_max;
+    unsigned int k = 0;
+    while (k < myData->countVertex) {
+      myData->vector_3d[k] *= scale;
+      k++;
+      myData->vector_3d[k] *= scale;
+      k++;
+      myData->vector_3d[k] *= scale;
+      k++;
+    }
+    free(ver_x);
+    free(ver_y);
+    free(ver_z);
   }
-  d_max = find_max(myData->vector_3d, myData->countVertex);
-  if (d_max != 0)
-    scale = (value - value * -1) / d_max;
-  unsigned int k = 0;
-  while (k < myData->countVertex) {
-    myData->vector_3d[k] *= scale;
-    k++;
-    myData->vector_3d[k] *= scale;
-    k++;
-    myData->vector_3d[k] *= scale;
-    k++;
-  }
-  free(ver_x);
-  free(ver_y);
-  free(ver_z);
 }
 
 void cleanAll(data_struct *myData) {
